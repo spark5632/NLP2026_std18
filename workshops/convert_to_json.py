@@ -41,3 +41,23 @@ text_with_context = "ละเมิดลิขสิทธิ์ตามม�
 conf , sig = cal_confidence(text_with_context,2)
 print(f"Confidence: {conf: 2f}")
 print(f"Signals: {sig}")
+
+#3 ลำดับศักดิ์ หาค่าน้ำหนักข้อมูล
+def get_physic_gate_preview(predicted_class,text):
+    #0:None, 1: Patent (Hight Complexity), 2: copyright (medium Complexity)
+    weights = {0:1,1:8.5,2:6.5}
+    base_weight = weights.get(predicted_class,1.0)
+   
+    # ปรับweight ตามความร้ายแรง
+
+    if "ร้ายแรก" in text or "จำนวนมาก" in text:
+        base_weight = min(base_weight+1.0,10)
+    return base_weight
+
+text = "การละเมิดสิทธิ์บัตรรายใหญ่"
+weight = get_physic_gate_preview(1,text)
+
+print(f"Physics Gate Weight review: {weight}/10.0")
+
+    
+
