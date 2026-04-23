@@ -42,6 +42,8 @@ conf , sig = cal_confidence(text_with_context,2)
 print(f"Confidence: {conf: 2f}")
 print(f"Signals: {sig}")
 
+
+
 #3 ลำดับศักดิ์ หาค่าน้ำหนักข้อมูล
 def get_physic_gate_preview(predicted_class,text):
     #0:None, 1: Patent (Hight Complexity), 2: copyright (medium Complexity)
@@ -59,5 +61,31 @@ weight = get_physic_gate_preview(1,text)
 
 print(f"Physics Gate Weight review: {weight}/10.0")
 
-    
 
+#Make json
+
+import json
+from datetime import datetime
+
+def create_json_entry(doc_id,text):
+    label = detect_category(text)
+    conf,signal= cal_confidence(text,label)
+    weight = get_physic_gate_preview(label,text)
+    entry = {
+        "id":f"LAW-{doc_id:04d}",
+        "text":text,
+        "label": label,
+        "metadata":{
+            "confidence":conf,
+            "context-signal":signal,
+            "physic_gate_weight":weight,
+            "processed_at":datetime.now().isoformat(),
+            "requirse_expert_review":conf <0.85
+        }
+    }
+
+    return entry
+
+sample_entry = create_json_entry(1,"ละเมิดสิทธิ์บัตรการประดิษฐ์")
+
+print(json.dumps(sample_entry,indent=4,ensure_ascii=False))
