@@ -28,6 +28,29 @@ print(f"Input: {test_text}")
 print(f"Output: {tokens}")
 
 
+#การวัดค่า ความกำกวม
+def calculate_baseline_ambiguity(text):
+    matches = []
+    for word in LEGAL_KEYWORDS:
+        for m in re.finditer(re.escape(word),text):
+            if m:
+                matches.append((m.start(),m.end().word))
+            #ตรวจสอบการทับซ้อน
+    overlaps = 0
+    for i in range(len(matches)):
+        if matches[i][0] < matches[i][1] and matches [j][0] < matches[i][1]:
+            overlaps += 1
+    return overlaps/len(matches) if matches else 0
+    
+sample_text = ""
+baseline_tokens = legal_tokenizer(sample_text)
+baseline_rate = calculate_baseline_ambiguity(sample_text)
+print(f"W1 Baseline Rusrult")
+print(f"Tokens : {baseline_tokens} ")
+print(f"Baseline Am")
+
+
+
 #2.context-aware entity extraction
 def extract_legal_entities(text):
     entities = []
@@ -37,7 +60,7 @@ def extract_legal_entities(text):
     if "ละเมิด" in text:
         entities.append({"type":"ACTION","value":"INFRINGEMENT  ","conf":0.85})
     return entities 
-           
+      
 
 sample = "มีการละเมิดสิทธิบัตรเกิดขึ้นในเขตพื้นที่"
 found  = extract_legal_entities(sample)
