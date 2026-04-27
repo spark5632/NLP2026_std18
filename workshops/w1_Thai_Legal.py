@@ -1,6 +1,7 @@
 import re
 from sklearn.feature_extraction.text import TfidfVectorizer
 from pythainlp.tokenize import word_tokenize
+from transformers import AutoTokenizer
 # from pythainlp.tokenize.attacut import AttacutTokenizer  as attacut
 # import deepcut
 
@@ -34,20 +35,51 @@ def calculate_baseline_ambiguity(text):
     for word in LEGAL_KEYWORDS:
         for m in re.finditer(re.escape(word),text):
             if m:
-                matches.append((m.start(),m.end().word))
+                matches.append((m.start(),m.end(),word))
             #ตรวจสอบการทับซ้อน
     overlaps = 0
     for i in range(len(matches)):
-        if matches[i][0] < matches[i][1] and matches [j][0] < matches[i][1]:
-            overlaps += 1
+        for j in range   (i+1,  len(matches)):
+            if matches[i][0] < matches[j][1] and matches [j][0] < matches[i][1]:
+                overlaps += 1
     return overlaps/len(matches) if matches else 0
     
-sample_text = ""
+sample_text = "คดีการละเมิดสิทธิบัตร"
 baseline_tokens = legal_tokenizer(sample_text)
 baseline_rate = calculate_baseline_ambiguity(sample_text)
 print(f"W1 Baseline Rusrult")
 print(f"Tokens : {baseline_tokens} ")
-print(f"Baseline Am")
+print(f"Baseline Ambiguity : {baseline_rate}")
+
+# WangChanBERTa Pretain
+#  1.Load WangchanBerta
+
+
+model_name = "airesearch/wangchanberta-base-att-spm-uncased"
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+
+def berta_tokenizer(text):
+    tokens = tokenizer.tokenize(text)
+    return [t.replace("","")for t in tokens if t.replace("","")]
+
+# test กำกวม 
+def analyze_refined_amiguity(text,legal_keywords):
+    tokens = berta_tokenizer(text)
+    frag_score = []
+    for kw in legal_keywords:
+        if kw in text:
+            kw_tokens = berta_tokenizer(kw)
+            fragment_ratio = len(kw_tokens)/1
+            frag_score.append(fragment_ratio)
+    # Ambiguity = Average Fragmentation -1 แต่ถ้าตัดพอดี เท่ากับ 0
+    avg_frag = (sum(frag_score) / len(frag_score)) -1 if frag_score else 0
+    return min(avg_frag,1.0)
+    # run แสดงผล
+refined_tokens = berta_tokenizer(sample_text)
+refined_rate = analyze_refined_amiguity(sample_text,LEGAL_KEYWORDS)
+print(f"--W1 : Refined With WangchanBERTa---")
+print(f"Tokens : {refined_tokens}")
+print(f"New Ambiguity Fragmentation Rate : {refined_rate:.4f}")
 
 
 
