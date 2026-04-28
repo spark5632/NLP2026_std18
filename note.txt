@@ -1,0 +1,43 @@
+fork ทำกิ่งตัวเอง
+
+1 #commit 
+
+w0 confident
+
+fork งานจารย์
+
+git clone 
+ cd folder
+
+git checkout -b std18-w0
+
+git add .
+git commit -m "dd"
+git push origin std18-w0
+
+-------------------------------------------------------
+   
+git remote set-url origin http:/...
+
+git remote -v
+
+
+git log --oneline
+
+
+pip install deepcut
+pip install tensorflow
+
+
+pip install transformers
+pip install tiktoken
+pip install sentencepiece sacremoses
+pip install protobuf==3.20.3 
+pip install numpy
+pip install scikit-learn
+pip install imbalanced-learn
+pip install pythainlp
+pip install torch torchvision torchaudio
+pip install matplotlib
+pip install seaborn
+from sklearn.metrics import confusion_matrix

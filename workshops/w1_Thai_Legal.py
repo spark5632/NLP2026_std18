@@ -113,6 +113,7 @@ tfudf_matrix = vectorizer.fit_transform(corpus)
 print (f"---TF-IDF--Vector (Shape:{tfudf_matrix.shape})-------")
 print(f"Vocabulary:{vectorizer.get_feature_names_out()}")
 print(f"Vector sample (Doc 1):\n{tfudf_matrix[1].toarray()}")
+print(f"shape = {tfudf_matrix.shape}")
 
 
 # 4.Physics Gate Weight (Legal Hierachy)
