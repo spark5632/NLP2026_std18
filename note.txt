@@ -27,8 +27,6 @@ git log --oneline
 
 pip install deepcut
 pip install tensorflow
-
-
 pip install transformers
 pip install tiktoken
 pip install sentencepiece sacremoses
@@ -40,4 +38,6 @@ pip install pythainlp
 pip install torch torchvision torchaudio
 pip install matplotlib
 pip install seaborn
+
+
 from sklearn.metrics import confusion_matrix
